@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Sign Up | Bootstrap Based Admin Template - Material Design</title>
+    <!-- Favicon-->
+    <% include ../partial/head %>
+</head>
+
+<body class="signup-page">
+    <div class="signup-box">
+        <div class="logo">
+            <a href="javascript:void(0);">Admin<b>BSB</b></a>
+            <small>Admin BootStrap Based - Material Design</small>
+        </div>
+        <% if(locals.messages.warn){%>
+          <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          <strong>Warning!</strong><br><%=messages.warn%>
+        </div>
+          <%}%>
+        <div class="card">
+            <div class="body">
+                <form id="sign_up" method="POST" action="/signup">
+                    <div class="msg">Register a new membership</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="username" placeholder="Name" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">phone</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="phone" placeholder="Phone">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" name="password" minlength="6" placeholder="Password" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" name="confirm" minlength="6" placeholder="Confirm Password" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="terms" id="terms" class="filled-in chk-col-pink">
+                        <label for="terms">I read and agree to the <a href="javascript:void(0);">terms of usage</a>.</label>
+                    </div>
+
+                    <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">SIGN UP</button>
+
+                    <div class="m-t-25 m-b--5 align-center">
+                        <a href="/signin">You already have a membership?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <% include ../partial/scripts %>
+    <script type="text/javascript">
+    $(function () {
+      $.validator.addMethod("pwcheck", function(value) {
+              return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+                  && /[a-z]/.test(value) // has a lowercase letter
+                  && /[A-Z]/.test(value) // has a uppercase letter
+                  && /\d/.test(value) // has a digit
+           });
+
+        $('#sign_up').validate({
+            rules: {
+                'terms': {
+                    required: true
+                },
+                'confirm': {
+                    equalTo: '[name="password"]'
+                },
+                'password':{
+                  pwcheck: true
+                  //pwcheck2: true
+                }
+            },
+            messages: {
+              password: {
+                pwcheck:"Please input at least 1 Upper,  1 lower, 1 digit..."
+              }
+            },
+            highlight: function (input) {
+                console.log(input);
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (input) {
+                $(input).parents('.form-line').removeClass('error');
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.input-group').append(error);
+                $(element).parents('.form-group').append(error);
+            }
+        });
+        $('#email').blur(function () {
+          var data = { email: $('#email').val()};
+          if(data.email == '') return ;
+          $.ajax({url: "/signup/duplicate", data:data, type: 'POST', success: function (result) {
+            if (result.status == false) {
+              alert(result.msg);
+              $('#email').val('');
+              $('#email').focus();
+            }
+          }});
+        });
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <img src="/images/download.jpg" alt="">
+    <% if(user) {%>
+      <p>User Name: <%= user.name %></p>
+      <p> User Email: <%= user.email %></p>
+      <p>User Role: <%= user.role %></p>
+    <%}else{%>
+      <p>Please Sign In</p>
+    <%}%>
+  </body>
+</html>

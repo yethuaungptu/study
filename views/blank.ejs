@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include partial/head %>
+    <title>Blank Page | Bootstrap Based Admin Template - Material Design</title>
+
+</head>
+
+<body class="theme-red">
+  <!-- Page Loader -->
+  <% include partial/header %>
+    <section>
+      <!-- Left Sidebar -->
+      <aside id="leftsidebar" class="sidebar">
+        <% include partial/leftsidebar %>
+          <!-- #Menu -->
+          <!-- Footer -->
+          <% include partial/footer %>
+            <!-- #Footer -->
+      </aside>
+      <!-- #END# Left Sidebar -->
+      <!-- Right Sidebar -->
+      <% include partial/rightsidebar %>
+        <!-- #END# Right Sidebar -->
+    </section>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="block-header">
+          <h2>BLANK PAGE</h2>
+        </div>
+      </div>
+    </section>
+    <% include partial/scripts %>
+    <script src="/js/demo.js"></script>
+    <!-- Custom Js -->
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>
