@@ -90,7 +90,12 @@
                   && /[A-Z]/.test(value) // has a uppercase letter
                   && /\d/.test(value) // has a digit
            });
-
+      $.validator.addMethod("pwcheck2", function (value) {
+        if( value.indexOf($('#email').val()) >= 0 ){
+          return false;
+        }
+        return true;
+      });
         $('#sign_up').validate({
             rules: {
                 'terms': {
@@ -100,13 +105,14 @@
                     equalTo: '[name="password"]'
                 },
                 'password':{
-                  pwcheck: true
-                  //pwcheck2: true
+                  pwcheck: true,
+                  pwcheck2: true
                 }
             },
             messages: {
               password: {
-                pwcheck:"Please input at least 1 Upper,  1 lower, 1 digit..."
+                pwcheck:"Please input at least 1 Upper,  1 lower, 1 digit...",
+                pwcheck2: "Do not contain your Email..."
               }
             },
             highlight: function (input) {

@@ -27,6 +27,20 @@ var UserSchema = new Schema({
   role:{
     type: String,
     default: 'USER'
+  },
+  updated:{
+    type: Date,
+    default:Date.now
+  },
+  instered:{
+    type: Date,
+    default:Date.now
+  },
+  updatedBy:{
+    type: String
+  },
+  insteredBy:{
+    type: String
   }
 });
 
