@@ -19,3 +19,14 @@
 
 <!-- Demo Js -->
 <script src="/plugins/jquery-cookie/jquery.cookie.js"></script>
+
+<script src="/plugins/dropzone/dropzone.js"></script>
+
+<script type="text/javascript">
+  var liTags = $('a[href="<%=active%>"]').parents('li');
+  if(liTags.length>0){
+    $('.active').removeClass('active');
+
+    $(liTags).addClass('active');
+  }
+</script>

@@ -7,6 +7,10 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <p>Greeting: <%=__('Hello') %></p>
+    <a href="javascript:location.href='?lang=en';">English</a>
+    <a href="javascript:location.href='?lang=my';">Myanmar</a>
+    <a href="javascript:location.href='?lang=kr';">Korea</a>
     <img src="/images/download.jpg" alt="">
     <% if(user) {%>
       <p>User Name: <%= user.name %></p>

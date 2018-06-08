@@ -42,7 +42,7 @@
                       </a>
                   </li>
                   <li class="active">
-                      <i class="material-icons">list</i> ADD USER
+                      <i class="material-icons">list</i> USER MODIFY
                   </li>
               </ol>
           </div>
@@ -67,7 +67,8 @@
                   </ul>
               </div>
               <div class="body">
-                  <form action="/admin/users/add" name="frm" method="post" id="frm" class="form-horizontal " enctype="multipart/form-data">
+                  <form action="/admin/users/modify" name="frm" method="post" id="frm" class="form-horizontal" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<%= user._id %>">
                       <div class="row clearfix">
                           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
                               <label for="name">User Name</label>
@@ -75,7 +76,7 @@
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="text" id="name" name="name" class="form-control" placeholder="Your Name">
+                                      <input type="text" id="name" name="name" class="form-control" placeholder="Your Name" value="<%= user.name %>">
                                   </div>
                               </div>
                           </div>
@@ -87,7 +88,7 @@
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email address">
+                                      <%= user.email %>
                                   </div>
                               </div>
                           </div>
@@ -99,17 +100,20 @@
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+                                      <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" value="<%= user.phone %>">
                                   </div>
                               </div>
                           </div>
                       </div>
                       <div class="row clearfix">
                           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                              <label for="phone">File upload</label>
+                              <label for="photo">File upload</label>
                           </div>
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                             <div class="form-group">
+                              <div class="form-line">
+                                <img src="<%= user.photo %>" alt="User photo" width="30%" onerror="this.src='/images/noimage.png'">
+                              </div>
                                 <div class="form-line">
                                     <input type="file" id="photo" name="photo" class="form-control" accept="image/x-png,image/gif,image/jpeg"/>
                                 </div>
@@ -135,7 +139,7 @@
                           </div>
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
-                                <select class="form-control show-tick" name="role">
+                                <select class="form-control show-tick" name="role" id="role">
                                       <option value="">Select Role</option>
                                       <option value="ADMIN">Admin</option>
                                       <option value="USER">User</option>
@@ -165,12 +169,14 @@
     <script type="text/javascript">
     $(function () {
       $.validator.addMethod("pwcheck", function(value) {
+        if(value == '') return true;
               return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
                   && /[a-z]/.test(value) // has a lowercase letter
                   && /[A-Z]/.test(value) // has a uppercase letter
                   && /\d/.test(value) // has a digit
            });
            $.validator.addMethod("pwcheck2", function (value) {
+             if(value == '') return true;
              if( value.indexOf($('#email').val()) >= 0 ){
                return false;
              }
@@ -179,9 +185,6 @@
         $('#frm').validate({
             rules: {
                 'name': {
-                    required: true
-                },
-                'email': {
                     required: true
                 },
                 'password':{
@@ -208,21 +211,8 @@
                 $(element).parents('.form-group').append(error);
             }
         });
-        $('#email').blur(function () {
-          var data = { email: $('#email').val()};
-          if(data.email == '') return ;
-          $.ajax({url: "/signup/duplicate", data:data, type: 'POST', success: function (result) {
-            if (result.status == false) {
-              alert(result.msg);
-              $('#email').val('');
-              $('#email').focus();
-            }
-          }});
-        });
-        Dropzone.options.frm = {
-          paramName: "file",
-          maxFilesize: 2
-        };
+
+        $('#role').selectpicker('val','<%=user.role%>');
       });
     </script>
 </body>

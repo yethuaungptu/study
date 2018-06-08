@@ -42,7 +42,7 @@
                       </a>
                   </li>
                   <li class="active">
-                      <i class="material-icons">list</i> ADD USER
+                      <i class="material-icons">person_add</i> VIEW USER
                   </li>
               </ol>
           </div>
@@ -52,7 +52,7 @@
           <div class="card">
               <div class="header">
                   <h2>
-                      ADD USER
+                      View USER
                   </h2>
                   <ul class="header-dropdown m-r--5">
                       <li class="dropdown">
@@ -61,13 +61,14 @@
                           </a>
                           <ul class="dropdown-menu pull-right">
                               <li><a href="/admin/users/list">User List</a></li>
-                              <li><a href="javascript:frm.reset();">RESET</a></li>
+                              <li><a href="/admin/users/add">Add User</a></li>
+                              <li><a href="javascript:delete();">Delete User</a></li>
                           </ul>
                       </li>
                   </ul>
               </div>
               <div class="body">
-                  <form action="/admin/users/add" name="frm" method="post" id="frm" class="form-horizontal " enctype="multipart/form-data">
+                  <form action="/admin/users/add" method="post" id="frm" class="form-horizontal">
                       <div class="row clearfix">
                           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
                               <label for="name">User Name</label>
@@ -75,7 +76,7 @@
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="text" id="name" name="name" class="form-control" placeholder="Your Name">
+                                      <%= user.name %>
                                   </div>
                               </div>
                           </div>
@@ -87,7 +88,7 @@
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email address">
+                                      <%= user.email %>
                                   </div>
                               </div>
                           </div>
@@ -99,31 +100,19 @@
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+                                      <%= user.phone %>
                                   </div>
                               </div>
                           </div>
                       </div>
                       <div class="row clearfix">
                           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                              <label for="phone">File upload</label>
-                          </div>
-                          <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="file" id="photo" name="photo" class="form-control" accept="image/x-png,image/gif,image/jpeg"/>
-                                </div>
-                            </div>
-                          </div>
-                      </div>
-                      <div class="row clearfix">
-                          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                              <label for="password">Password</label>
+                              <label for="phone">Photo</label>
                           </div>
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
                                   <div class="form-line">
-                                      <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password">
+                                    <img src="<%= user.photo %>" width="30%" alt="User photo" onerror="this.src='/images/noimage.png'">
                                   </div>
                               </div>
                           </div>
@@ -135,19 +124,36 @@
                           </div>
                           <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                               <div class="form-group">
-                                <select class="form-control show-tick" name="role">
-                                      <option value="">Select Role</option>
-                                      <option value="ADMIN">Admin</option>
-                                      <option value="USER">User</option>
-                                      <option value="STAFF">Staff</option>
-                                  </select>
+                              <%= user.role %>
                               </div>
                           </div>
                       </div>
-
+                      <div class="row clearfix">
+                          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                              <label for="role">Inserted</label>
+                          </div>
+                          <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                              <div class="form-group">
+                              <%= user.inserted_date %> By <%= user.insertedBy.name %>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row clearfix">
+                          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                              <label for="role">Updated</label>
+                          </div>
+                          <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                              <div class="form-group">
+                              <%= user.updated_date %> By <%= user.updatedBy.name %>
+                              </div>
+                          </div>
+                      </div>
                       <div class="row clearfix">
                           <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                              <button type="submit" class="btn btn-primary m-t-15 waves-effect" value="save">SAVE</button>
+                              <button type="button" class="btn btn-primary m-t-15 waves-effect" id="btnModify" >MODIFY</button>
+                              <button type="button" class="btn btn-warning m-t-15 waves-effect" id="btnDelete" value="save">DELETE</button>
+                            </div>
+
                           </div>
                       </div>
                   </form>
@@ -219,11 +225,14 @@
             }
           }});
         });
-        Dropzone.options.frm = {
-          paramName: "file",
-          maxFilesize: 2
-        };
       });
+      $('#btnModify').click(function () {
+        location.href='/admin/users/modify/<%= user._id %>'
+      });
+      $('#btnDelete').click(function () {
+        if(confirm('Are you sure want to delete?'))  location.href = '/admin/users/delete/'+'<%= user._id %>'
+      });
+
     </script>
 </body>
 

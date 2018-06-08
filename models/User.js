@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'); //mongodb module
 var bcrypt = require('bcrypt-nodejs');
+var dateformat = require('dateformat');
 //Define a schama
 var Schema = mongoose.Schema;
 var UserSchema = new Schema({
@@ -28,6 +29,9 @@ var UserSchema = new Schema({
     type: String,
     default: 'USER'
   },
+  photo:{
+    type: String
+  },
   updated:{
     type: Date,
     default:Date.now
@@ -37,10 +41,16 @@ var UserSchema = new Schema({
     default:Date.now
   },
   updatedBy:{
-    type: String
+    type: Schema.Types.ObjectId,
+    ref:'Users'
   },
-  insteredBy:{
-    type: String
+  insertedBy:{
+    type: Schema.Types.ObjectId,
+    ref:'Users'
+  },
+  isDeleted:{
+    type:Boolean,
+    default:false,
   }
 });
 
@@ -48,6 +58,14 @@ var UserSchema = new Schema({
 UserSchema.pre('save', function (next) {
   this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(8),null);
   next();
+});
+
+UserSchema.virtual('updated_date').get(function () {
+  return dateformat(this.updated, 'dd/mm/yyyy HH:MM');
+});
+
+UserSchema.virtual('inserted_date').get(function () {
+  return dateformat(this.instered, 'dd/mm/yyyy HH:MM');
 });
 
 UserSchema.statics.compare = function (cleartext,encrypted) {

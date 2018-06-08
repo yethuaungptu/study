@@ -64,8 +64,11 @@ router.post('/signin', function(req, res, next) {
       req.flash('warn', 'Email not exists or password not matched!!');
       res.redirect('/signin');
     }else {
-      req.session.user = { name: user.name, email: user.email, role:user.role };
-      if(user.role == 'ADMIN'){
+      req.session.user = {_id:user._id, name: user.name, email: user.email, role:user.role };
+      if(req.body.forward){
+        res.redirect(req.body.forward);
+      }
+      else if(user.role == 'ADMIN'){
         res.redirect('/admin');
       }else if (user.role == 'USER') {
         res.redirect('/members');
@@ -91,8 +94,6 @@ router.get('/init', function(req, res, next) {
   user.password = 'admin123';
   user.role = 'ADMIN';
     //save to database using models
-
-
         user.save(function (err, result) {
           if(err) throw err;
           req.flash('success', 'Registration successful. Welcome to '+ user.name);
